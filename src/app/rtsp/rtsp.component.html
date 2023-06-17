@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <style>
+    .center {
+      display: flex;
+      justify-content: center;
+      /* align-items: center; */
+      height: 100vh;
+      /* background-color: rgb(185, 211, 255); */
+    }
+    #camera {
+      text-align: center;
+      font-size: 36px;
+      font-weight: bold;
+      text-transform: uppercase;
+      background-color: rgb(255, 238, 47);
+      color: rgb(0, 0, 0);
+      padding: 10px;
+      border-radius: 4px;
+      display: block;
+    }
+  </style>
+  <body>
+    <h2 id="camera">Camera Live View</h2>
+    <div class="center">
+      <iframe
+        width="1280px"
+        height="720px"
+        src="http://idp.southeastasia.cloudapp.azure.com:2000"
+      ></iframe>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Smart Bus Stop</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        color: #333;
+        background-color: peachpuff;
+      }
+
+      #header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
+        padding: 20px;
+        background-color: #3498db;
+        color: #fff;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      #title {
+        font-size: 36px;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin: 0;
+      }
+
+      #mongo {
+        text-align: center;
+        font-size: 36px;
+        font-weight: bold;
+        text-transform: uppercase;
+        background-color: greenyellow;
+        color: orange;
+        padding: 10px;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        display: block;
+      }
+
+      #messageDisplay {
+        padding: 20px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      #messageDisplay p {
+        margin: 0;
+        color: #333;
+        font-size: 18px;
+        line-height: 1.4;
+        display: inline;
+      }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFaXNvUSNlqQoqlNBgCgppWcSeYxb5kDM"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  </head>
+  <body>
+    <div id="header">
+      <div></div>
+      <h1 id="title">Smart Bus Stop System</h1>
+      <div></div>
+    </div>
+    <div id="messageDisplay">Waiting for the camera people count . . .</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mqtt/4.2.7/mqtt.min.js"></script>
+    <script>
+      const broker = "wss://broker.emqx.io:8084/mqtt";
+      const topic = "camera-idp";
+
+      const mqttclient = mqtt.connect(broker, { clientId: "camera-mqtt-1" });
+
+      mqttclient.on("connect", () => {
+        console.log("Connected to MQTT broker.emqx.io");
+        mqttclient.subscribe(topic);
+      });
+
+      mqttclient.on("message", (topic, message) => {
+        console.log(`Received '${message.toString()}' from '${topic}' topic`);
+        displayMessage(message.toString());
+      });
+
+      function displayMessage(message) {
+        // Clear the existing messages
+        $("#messageDisplay").empty();
+
+        // Create a new paragraph element
+        const paragraph = document.createElement("p");
+        // Add the "message" class to the paragraph
+        paragraph.classList.add("number-message");
+        // Set the content of the paragraph to the received message
+        paragraph.textContent =
+          "There is " + message + " people waiting at Bus Stop now";
+        // Append the paragraph to the messageDisplay div
+        document.getElementById("messageDisplay").appendChild(paragraph);
+      }
+    </script>
+    <br /><br />
+    <app-root></app-root>
+    <br />
+    <h2 id="mongo">Mongo Database Analysis</h2>
+    <iframe
+      style="
+        background: #3fa037;
+        border: 10px solid #000000;
+        border-radius: 15px;
+        width: 100%;
+        height: 3000px;
+        box-sizing: border-box;
+      "
+      src="https://charts.mongodb.com/charts-cbs-hwrcx/embed/dashboards?id=e24b7357-101e-4638-9fae-9f77da3e280f&theme=light&autoRefresh=true&maxDataAge=3600&showTitleAndDesc=false&scalingWidth=scale&scalingHeight=scale"
+    ></iframe>
+  </body>
+</html>
+
+<!-- Google map API key -->
+<!-- AIzaSyBox4hCLg-vVyvNN0ZMq1SOAwqadeh2HfU -->
