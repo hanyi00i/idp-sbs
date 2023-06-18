@@ -74,18 +74,13 @@ export class AppComponent {
 
   onConnect() {
     this.mqtt.subscribe('gps-idp', {});
-    console.log('Connected to ' + this.host);
   }
 
   onMessageArrived(message: Paho.MQTT.Message) {
-    console.log('Message Arrived');
     console.log(message.payloadString);
     const latitude = Number(message.payloadString.split(',')[0]);
     const longitude = Number(message.payloadString.split(',')[1]);
     const clientid = Number(message.payloadString.split(',')[2].split('-')[2]);
-    console.log('Latitude:', latitude);
-    console.log('Longitude:', longitude);
-    console.log('Client ID:', clientid);
     // Call the updateMarkerCoordinates function and pass the latitude and longitude as arguments
     this.updateMarkerCoordinates(latitude, longitude, clientid);
   }
@@ -95,13 +90,15 @@ export class AppComponent {
     setTimeout(this.connectMQTT.bind(this), this.reconnectTimeout);
   }
 
+  distance: string = "THERE IS NO BUS NEARBY THE BUS STOP";
+  conditionr: boolean = true;
+  conditiong: boolean = false;
   updateMarkerCoordinates(
     latitude: number,
     longitude: number,
     clientid: number
   ) {
     // Iterate over the markerData array and update the specific marker
-    console.log('Updating marker coordinates of ', clientid);
     // console.log(this.markerData[0]);
     // check if markerData[clientid] is undefined, if it is then create a new object with previous object data
     this.markerData[clientid] = {
@@ -124,6 +121,16 @@ export class AppComponent {
     this.markerData[clientid].lng = longitude;
     // Call the function to redraw the markers
     this.redrawMarkers();
+    if (latitude >= 2.3277 && latitude <= 2.3279 && longitude >= 102.29 && longitude <= 102.30) {
+      this.distance = "THERE IS BUS " + clientid + " NEARBY THE BUS STOP";
+      this.conditionr = false;
+      this.conditiong = true;
+    } else {
+      this.distance = "THERE IS NO BUS NEARBY THE BUS STOP";
+      this.conditiong = false;
+      this.conditionr = true;
+    }
+      
   }
 
   ngOnInit() {
@@ -166,7 +173,7 @@ export class AppComponent {
 
   zoomIn() {
     if (this.zoom < this.maxZoom) this.zoom++;
-    console.log('Get Zoom', this.map.getZoom());
+    console.log('Get Zoom');
   }
 
   zoomOut() {
@@ -174,8 +181,9 @@ export class AppComponent {
   }
 
   eventHandler(event: any, name: string) {
-    console.log(event, name);
-
+    this.distance = "THERE IS NO BUS NEARBY THE BUS STOP";
+    this.conditiong = false;
+    this.conditionr = true;
     // Add marker on double click event
     if (name === 'mapDblclick') {
       this.dropMarker(event);
