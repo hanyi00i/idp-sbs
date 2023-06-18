@@ -121,7 +121,7 @@ export class AppComponent {
     this.markerData[clientid].lng = longitude;
     // Call the function to redraw the markers
     this.redrawMarkers();
-    if (latitude >= 2.3277 && latitude <= 2.3279 && longitude >= 102.29 && longitude <= 102.30) {
+    if (latitude >= 2.3277 && latitude <= 2.3279 && longitude >= 102.28 && longitude <= 102.30) {
       this.distance = "THERE IS BUS " + clientid + " NEARBY THE BUS STOP";
       this.conditionr = false;
       this.conditiong = true;
@@ -130,7 +130,6 @@ export class AppComponent {
       this.conditiong = false;
       this.conditionr = true;
     }
-      
   }
 
   ngOnInit() {
