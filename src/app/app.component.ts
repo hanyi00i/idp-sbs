@@ -13,6 +13,9 @@ export class AppComponent {
   host = 'test.mosquitto.org';
   port = 8081;
 
+  bslat = 0;
+  bslng = 0;
+
   constructor() {
     this.connectMQTT();
   }
@@ -121,7 +124,25 @@ export class AppComponent {
     this.markerData[clientid].lng = longitude;
     // Call the function to redraw the markers
     this.redrawMarkers();
-    if (latitude >= 2.3277 && latitude <= 2.3279 && longitude >= 102.28 && longitude <= 102.30) {
+
+    // Calculate Distance
+    var lat1Rad = (this.bslat * Math.PI) / 180;
+    var lon1Rad = (this.bslng * Math.PI) / 180;
+    var lat2Rad = (latitude * Math.PI) / 180;
+    var lon2Rad = (longitude * Math.PI) / 180;
+  
+    // Haversine formula
+    const deltaLat = lat2Rad - lat1Rad;
+    const deltaLon = lon2Rad - lon1Rad;
+    const a =
+      Math.sin(deltaLat / 2) ** 2 +
+      Math.cos(lat1Rad) * Math.cos(lat2Rad) * Math.sin(deltaLon / 2) ** 2;
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = 6371 * c; // Earth's radius in kilometers
+    // Convert distance to meters
+    const distanceMeters = distance * 1000;
+    console.log(distanceMeters,"meters")
+    if (distanceMeters < 2) {
       this.distance = "THERE IS BUS " + clientid + " NEARBY THE BUS STOP";
       this.conditionr = false;
       this.conditiong = true;
@@ -132,22 +153,24 @@ export class AppComponent {
     }
   }
 
+
   ngOnInit() {
     // Add markers to the map based on the retrieved marker data
     navigator.geolocation.getCurrentPosition((position) => {
-      console.log(position.coords.latitude, position.coords.longitude);
+      this.bslat = position.coords.latitude;
+      this.bslng = position.coords.longitude;
       this.center = {
         // coordinates of bus stop
         //lat: position.coords.latitude,
         //lng: position.coords.longitude,
-        lat: 2.309776,
-        lng: 102.315013,
+        lat: this.bslat,
+        lng: this.bslng,
       };
 
       this.markers.push({
         position: {
-          lat: 2.309776,
-          lng: 102.315013,
+          lat: this.bslat,
+          lng: this.bslng,
         },
         title: 'Bus Stop',
       });
@@ -213,4 +236,6 @@ export class AppComponent {
     this.infoImage = image;
     this.info.open(marker);
   }
+
 }
+
