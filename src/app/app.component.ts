@@ -13,8 +13,8 @@ export class AppComponent {
   host = 'test.mosquitto.org';
   port = 8081;
 
-  bslat = 2.3146231;
-  bslng = 102.3187666;
+  bslat = 2.314633;
+  bslng = 102.3187711;
 
   constructor() {
     this.connectMQTT();
