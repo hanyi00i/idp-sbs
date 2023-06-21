@@ -13,8 +13,8 @@ export class AppComponent {
   host = 'test.mosquitto.org';
   port = 8081;
 
-  bslat = 2.3146462;
-  bslng = 102.3188058;
+  bslat = 0;
+  bslng = 0;
 
   constructor() {
     this.connectMQTT();
@@ -157,8 +157,8 @@ export class AppComponent {
   ngOnInit() {
     // Add markers to the map based on the retrieved marker data
     navigator.geolocation.getCurrentPosition((position) => {
-      //this.bslat = position.coords.latitude;
-      //this.bslng = position.coords.longitude;
+      this.bslat = position.coords.latitude;
+      this.bslng = position.coords.longitude;
       this.center = {
         // coordinates of bus stop
         //lat: position.coords.latitude,
